@@ -1,0 +1,68 @@
+let express = require("express");
+let District = require("../models/District");
+let bodyparser = require("body-parser");
+const e = require("express");
+
+let router = express.Router();
+
+router.post("/", (req, res)=>{
+    let body = req.body;
+    let object = new District();
+    object.id = 0;
+    object.name = body.name;
+    object.stateid = body.stateid;
+    object.save().then((result)=>{
+        res.end(JSON.stringify({status:"success", data:result}));
+    }, (err)=>{
+        res.end(JSON.stringify({status:"failed", data:err}));
+    });
+})
+
+router.get("/:stateid", (req, res)=>{
+    let object = new District();
+    object.stateid = req.params.stateid;
+    object.list().then((result)=>{
+        res.end(JSON.stringify({status:"success", data:result}));
+    }, (err)=>{
+        res.end(JSON.stringify({status:"failed", data:err}));
+    });
+})
+
+router.get("/:stateid/:id", (req, res)=>{
+    let object = new District();
+    object.id = req.params.id;
+    object.get().then((result)=>{
+        if(result.length > 0)
+            res.end(JSON.stringify({status:"success", data:result[0]}));
+        else
+            res.end(JSON.stringify({status:"failed", data:"Record not found"}));
+    }, (err)=>{
+        res.end(JSON.stringify({status:"failed", data:err}));
+    });
+ })
+
+router.put("/:id", (req, res)=>{
+    let body = req.body;
+    let object = new District();
+    object.id = req.params.id;
+    object.name = body.name;
+    object.stateid = body.stateid;
+    object.save().then((result)=>{
+        res.end(JSON.stringify({status:"success", data:result}));
+    }, (err)=>{
+        res.end(JSON.stringify({status:"failed", data:err}));
+    });
+})
+
+router.delete("/:id", (req, res)=>{
+    let body = req.body;
+    let object = new District();
+    object.id = req.params.id;
+    object.delete().then((result)=>{
+        res.end(JSON.stringify({status:"success", data:result}));
+    }, (err)=>{
+        res.end(JSON.stringify({status:"failed", data:err}));
+    });
+})
+
+module.exports = router;
